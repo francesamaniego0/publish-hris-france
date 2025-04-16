@@ -1,0 +1,155 @@
+
+body{
+    margin:0;
+    padding: 0;
+    display: flex;
+}
+.login-form-container {
+    margin: 0;
+    padding: 0;
+}
+.login-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-image: url('/img/bg.png');
+    background-repeat: no-repeat;
+    background-size: cover
+}
+.login-hero-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 50px;
+    position: relative;
+}
+
+
+.login-form-holder, 
+.forgot-password-form-holder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    align-items: center;
+    align-content: center;
+    display: flex;
+    flex-direction: column
+}
+.login-form-card {
+    background-color: var(--light);
+    padding: 60px 80px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* <-- This is the shadow */
+    min-width: 500px;
+}
+.login-form-card .logo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+.login-form-card .logo div{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.login-form-card div h1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 30px;
+    color: var(--dark);
+}
+.login-form-card .btn-save {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: 0;
+    background-color: #102B3C;
+    color: var(--light);
+    align-self: flex-end;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease;
+    cursor: pointer;
+    border-radius: .5rem;
+}
+.login-form-card .form input[type="text"],
+.login-form-card .form input[type="password"] {
+    outline: none;
+    border: none;
+    height: 2.5rem;
+    background-color: #d1d7e0;
+    font-size: 1rem;
+    padding-left: .8rem;
+    padding-right: .8rem;
+    border-radius: .5rem;
+    color: #002456;
+}
+.form a {
+    color: var(--accent);
+    align-self: flex-end;
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 12px;
+}
+.mod-form-row1{
+    margin: 25px 0px
+}
+@media(max-width:736px) {
+    .login-form-card {
+        padding: 30px;
+        min-width: 0;
+        transition: box-shadow 0.3s ease;
+    }
+    .login-form-card .logo,
+    .login-form-card div h1{
+        margin-bottom: 15px;
+        font-size: 12px;
+    }
+    .login-form-card .logo div{
+        width: 70%;
+    }
+    .mod-form-row1 {
+        font-size: 12px
+    }
+    .login-form-card .form input[type="text"],
+    .login-form-card .form input[type="password"],
+    .login-form-card .btn-save {
+        height: 30px;
+        padding: 5px;
+        font-size: 12px;
+    }
+    .login-form-card .form label {
+        font-size: 12px;
+    }
+    .mod-form-row1 {
+        margin: 15px 0px
+    }
+}
+
+
+.forgot-password-container {
+    position: absolute;
+    min-width: 100vw;
+    min-height: 100vh;
+    z-index: 1;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-image: url('/img/bg.png');
+    background-repeat: no-repeat;
+    background-size: cover
+}
+.forgot-password-form-holder {
+
+}
