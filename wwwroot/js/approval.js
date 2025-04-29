@@ -8,10 +8,15 @@ function initializeTimlogsDataTable() {
         $(tableId).DataTable().clear().destroy();
     }
     var user = $('#selectUserPending').val() ? $('#selectUserPending').val() : 0;
+    var dateF = document.getElementById('ptl-datefrom').value;
+    var datet = document.getElementById('ptl-dateto').value;
     const data = {
-        UserId: user
+        UserId: user,
+        datefrom: dateF,
+        dateto: datet,
+        status: tlStatusFilter
     };
-    // console.log(data);
+     //console.log(data);
     var dtProperties = {
         ajax: {
             url: '/TimeLogs/GetPedingTimelogsList',
@@ -21,7 +26,7 @@ function initializeTimlogsDataTable() {
             },
             dataType: "json",
             processing: true,
-            serverSide: true,
+            //serverSide: true,
             complete: function (xhr) {
                 var url = new URL(window.location.href);
                 var _currentPage = url.searchParams.get("page01") == null ? 1 : url.searchParams.get("page01");
@@ -30,31 +35,118 @@ function initializeTimlogsDataTable() {
 
                 // Compute total rendered hours after data is loaded
                 //computeTotalRenderedHours();
+
+                const data = xhr.responseJSON.data;
+                // Populate Department filter
+                const tldepartments = [...new Set(data.map(item => item.departmentName))];
+                const $tldeptFilter = $('#tldepartmentFilter');
+                if ($tldeptFilter.length && $tldeptFilter.children('option').length <= 1) {
+                    tldepartments.forEach(dep => {
+                        if (dep) {
+                            $tldeptFilter.append(`<option value="${dep}">${dep}</option>`);
+                        }
+                    });
+                }
+                // Populate Position filter
+                const tlpositions = [...new Set(data.map(item => item.position))];
+                const $tlposFilter = $('#tlpositionFilter');
+                if ($tlposFilter.length && $tlposFilter.children('option').length <= 1) {
+                    tlpositions.forEach(pos => {
+                        if (pos) {
+                            $tlposFilter.append(`<option value="${pos}">${pos}</option>`);
+                        }
+                    });
+                }
+
+                // Populate Position LEvel filter
+                const tlpositionLevels = [...new Set(data.map(item => item.positionLevel))];
+                const $tlposlvlFilter = $('#tlpositionLevelFilter');
+                if ($tlposlvlFilter.length && $tlposlvlFilter.children('option').length <= 1) {
+                    tlpositionLevels.forEach(poslvl => {
+                        if (poslvl) {
+                            $tlposlvlFilter.append(`<option value="${poslvl}">${poslvl}</option>`);
+                        }
+                    });
+                }
+                // Populate Employee Type filter
+                const tlemployeeTypes = [...new Set(data.map(item => item.employeeType))];
+                const $tlemployeeTypeFilter = $('#tlemployeeType');
+                if ($tlemployeeTypeFilter.length && $tlemployeeTypeFilter.children('option').length <= 1) {
+                    tlemployeeTypes.forEach(employeeType => {
+                        if (employeeType) {
+                            $tlemployeeTypeFilter.append(`<option value="${employeeType}">${employeeType}</option>`);
+                        }
+                    });
+                }
+                // Populate Fullname filter
+                const tlfullnames = [...new Set(data.map(item => item.fname+' '+item.lname))];
+                const $tlfullnameFilter = $('#tlfullname');
+                if ($tlfullnameFilter.length && $tlfullnameFilter.children('option').length <= 1) {
+                    tlfullnames.forEach(fullname => {
+                        if (fullname) {
+                            $tlfullnameFilter.append(`<option value="${fullname}">${fullname}</option>`);
+                        }
+                    });
+                }
             },
             error: function (err) {
                 alert(err.responseText);
             }
         },
-        dom: 'rtip',
+        dom: 'Brtip',
         columns: [
             { "title": "<input type='checkbox' id='checkAllTL' class='checkAllTL'>", "data": null, "orderable": false },
             {
                 "title": "Profile",
                 "data": "id",
+                //"render": function (data, type, row) {
+                //    var images = row['filePath'] == null ? img : row['filePath'];
+                //    //var images = img;
+                //    var fullname = row.fname + " " + row.lname;
+                //    var btn = `<div  style="display:flex; gap: 10px; align-items: center;">
+                //                            <div class="data-img">
+                //                                <img src='${images}' width="100%" />
+                //                            </div>
+                //                            <div style="align-items: center;">
+                //                                <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
+                //                                <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                //                            </div>
+                //                        </div>`;
+                //    return btn;
+                //}
                 "render": function (data, type, row) {
-                    var images = row['filePath'] == null ? img : row['filePath'];
-                    //var images = img;
+
+                    // var images = "https://eportal.odeccisolutions.com/" + row['filePath'] == null ? img : "https://eportal.odeccisolutions.com/" + row['filePath'];
+                    var images = "../../" + row['filePath'] == null ? img : "../../" + row['filePath'];
+                    let profile = "";
+                    var initial = row['fname'].charAt(0) + row['lname'].charAt(0);
                     var fullname = row.fname + " " + row.lname;
-                    var btn = `<div  style="display:flex; gap: 10px; align-items: center;">
-                                            <div class="data-img">
-                                                <img src='${images}' width="100%" />
-                                            </div>
-                                            <div style="align-items: center;">
-                                                <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
-                                                <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
-                                            </div>
-                                        </div>`;
-                    return btn;
+                    initial = initial.toUpperCase()
+                    if (row['filePath'] == "" || row['filePath'] == null) {
+                        profile = `<div  style="display:flex; gap: 10px; align-items: center;">
+                                        <div class="data-img">
+                                            <div class="initial"> ${initial} </div>
+                                        </div>
+                                        <div style="align-items: center;">
+                                            <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
+                                            <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                                        </div>
+                                    </div>
+                                    `;
+                    }
+                    else {
+                        profile = `<div  style="display:flex; gap: 10px; align-items: center;">
+                                        <div class="data-img">
+                                            <img src='${images}' width="100%" />
+                                        </div>
+                                        <div style="align-items: center;">
+                                            <h6 style="text-align: left; margin: 0; font-size: 14px;">${fullname}</h6>
+                                            <p style="text-align: left; margin: 0; font-size: 12px;">${row.employeeID}</p>
+                                        </div>
+                                    </div>
+                                    `;
+                    }
+                    return profile;
                 }
             },
             // {
@@ -161,8 +253,9 @@ function initializeTimlogsDataTable() {
                         button = `<label class="popup">
                                         <input type="checkbox">
                                         <div class="burger" tabindex="0">
-                                        <span></span>
-                                        <span></span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="5" viewBox="0 0 20 5" fill="none">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M17.5 5C16.837 5 16.2011 4.73661 15.7322 4.26777C15.2634 3.79893 15 3.16304 15 2.5C15 1.83696 15.2634 1.20107 15.7322 0.732234C16.2011 0.263393 16.837 0 17.5 0C18.163 0 18.7989 0.263393 19.2678 0.732234C19.7366 1.20107 20 1.83696 20 2.5C20 3.16304 19.7366 3.79893 19.2678 4.26777C18.7989 4.73661 18.163 5 17.5 5ZM2.5 5C1.83696 5 1.20107 4.73661 0.732233 4.26777C0.263392 3.79893 0 3.16304 0 2.5C0 1.83696 0.263392 1.20107 0.732233 0.732234C1.20107 0.263393 1.83696 0 2.5 0C3.16304 0 3.79893 0.263393 4.26777 0.732234C4.73661 1.20107 5 1.83696 5 2.5C5 3.16304 4.73661 3.79893 4.26777 4.26777C3.79893 4.73661 3.16304 5 2.5 5ZM10 5C9.33696 5 8.70107 4.73661 8.23223 4.26777C7.76339 3.79893 7.5 3.16304 7.5 2.5C7.5 1.83696 7.76339 1.20107 8.23223 0.732234C8.70107 0.263393 9.33696 0 10 0C10.663 0 11.2989 0.263393 11.7678 0.732234C12.2366 1.20107 12.5 1.83696 12.5 2.5C12.5 3.16304 12.2366 3.79893 11.7678 4.26777C11.2989 4.73661 10.663 5 10 5Z" fill="#205375"/>
+                                            </svg>
                                         </div>
                                         <nav class="popup-window">
                                             <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
@@ -196,6 +289,45 @@ function initializeTimlogsDataTable() {
                     }
                     return button;
                 }
+            },
+            {
+                "title": "Department",
+                "data": "departmentName",
+                name: "department",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "Position",
+                "data": "position",
+                name: "position",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "PositionLevel",
+                "data": "positionLevel",
+                name: "positionLevel",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "EmployeeType",
+                "data": "employeeType",
+                name: "employeeType",
+                visible: false,
+                searchable: true
+            },
+            {
+                "title": "Fullname",
+                "data": "fname",
+                name: "fullname",
+                visible: false,
+                searchable: true,
+                "render": function (data,row) {
+                    return data+" "+row.lname;
+                }
+
             }
             //,
             //{
@@ -208,6 +340,56 @@ function initializeTimlogsDataTable() {
             //    //    return textfield;
             //    //},
             //}
+        ],
+        buttons: [
+            {
+                extend: 'excel',
+                text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export Excel File</span>',
+                title: 'Leave Request List', // Set custom title in the file
+                filename: 'Leave_Request_List', // Custom file name
+                className: 'btn btn-info',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
+                }
+            },
+            {
+                text: 'Filters',
+                action: function () { },
+                init: function (api, node, config) {
+                    let filterUI = "";
+                    if (userType === 'Admin') {
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="tldepartmentFilter" class="btn btn-info">
+                                    <option value="">All Departments</option>
+                                </select>
+                                <select id="tlpositionFilter" class="btn btn-info">
+                                    <option value="">All Positions</option>
+                                </select>
+                                <select id="tlpositionLevelFilter" class="btn btn-info">
+                                    <option value="">All Positions Level</option>
+                                </select>
+                                <select id="tlemployeeType" class="btn btn-info">
+                                    <option value="">All Employee Type</option>
+                                </select>
+                                <select id="tlfullname" class="btn btn-info">
+                                    <option value="">All Users</option>
+                                </select>
+                                
+                            </div>`;
+                    }
+                    else {
+
+                        filterUI = `
+                            <div class="d-flex gap-2">
+                                <select id="lrfullname" class="btn btn-info">
+                                    <option value="">All Users</option>
+                                </select>
+                            </div>`;
+                    }
+                    $(node).html(filterUI);
+                }
+            }
         ]
         , responsive: true
         // , columnDefs:  columnDefsConfig
@@ -273,6 +455,53 @@ function initializeTimlogsDataTable() {
         lastSelectedRow = this;
         // console.log(data);
     });
+
+    $(document).on('change', '#tldepartmentFilter', function () {
+        const departmentval = $(this).val();
+        if (departmentval == "") {
+            table.column('department:name').search(departmentval).draw();
+        }
+        else {
+            table.column('department:name').search('^' + departmentval + '$', true, false).draw();
+        }
+    });
+
+    $(document).on('change', '#tlpositionFilter', function () {
+        const positionval = $(this).val();
+        if (positionval == "") {
+            table.column('position:name').search(positionval).draw();
+        }
+        else {
+            table.column('position:name').search('^' + positionval + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#tlpositionLevelFilter', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('positionLevel:name').search(val).draw();
+        }
+        else {
+            table.column('positionLevel:name').search('^' + val + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#tlemployeeType', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('employeeType:name').search(val).draw();
+        }
+        else {
+            table.column('employeeType:name').search('^' + val + '$', true, false).draw();
+        }
+    });
+    $(document).on('change', '#tlfullname', function () {
+        const val = $(this).val();
+        if (val == "") {
+            table.column('fullname:name').search(val).draw();
+        }
+        else {
+            table.column('fullname:name').search('^' + val + '$', true, false).draw();
+        }
+    });
 }
 function timelogsTableMOD() {
     $('#selectUserPending').on('change', function () {
@@ -325,6 +554,30 @@ function decline_item() {
         }
         initializeTimlogsDataTable();
     });
+}
+
+function viewRejectedTL() {
+    var statusLabel = document.getElementById('TLStatusLabel');
+    if (tlStatusFilter == 0) {
+        tlStatusFilter = 1;
+        showodcloading();
+        setTimeout(function () {
+            initializeTimlogsDataTable();
+            hideodcloading();
+            statusLabel.innerHTML = "Pending"
+        }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
+
+
+    }
+    else {
+        tlStatusFilter = 0;
+        showodcloading();
+        setTimeout(function () {
+            initializeTimlogsDataTable();
+            hideodcloading();
+            statusLabel.innerHTML = "Rejected"
+        }, 1000); // Delay execution by 2 seconds (2000 milliseconds)
+    }
 }
 //OverTime Tab
 
@@ -496,8 +749,9 @@ function initializeOTDataTable() {
                     button = `<label class="popup">
                                     <input type="checkbox">
                                     <div class="burger" tabindex="0">
-                                    <span></span>
-                                    <span></span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="5" viewBox="0 0 20 5" fill="none">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M17.5 5C16.837 5 16.2011 4.73661 15.7322 4.26777C15.2634 3.79893 15 3.16304 15 2.5C15 1.83696 15.2634 1.20107 15.7322 0.732234C16.2011 0.263393 16.837 0 17.5 0C18.163 0 18.7989 0.263393 19.2678 0.732234C19.7366 1.20107 20 1.83696 20 2.5C20 3.16304 19.7366 3.79893 19.2678 4.26777C18.7989 4.73661 18.163 5 17.5 5ZM2.5 5C1.83696 5 1.20107 4.73661 0.732233 4.26777C0.263392 3.79893 0 3.16304 0 2.5C0 1.83696 0.263392 1.20107 0.732233 0.732234C1.20107 0.263393 1.83696 0 2.5 0C3.16304 0 3.79893 0.263393 4.26777 0.732234C4.73661 1.20107 5 1.83696 5 2.5C5 3.16304 4.73661 3.79893 4.26777 4.26777C3.79893 4.73661 3.16304 5 2.5 5ZM10 5C9.33696 5 8.70107 4.73661 8.23223 4.26777C7.76339 3.79893 7.5 3.16304 7.5 2.5C7.5 1.83696 7.76339 1.20107 8.23223 0.732234C8.70107 0.263393 9.33696 0 10 0C10.663 0 11.2989 0.263393 11.7678 0.732234C12.2366 1.20107 12.5 1.83696 12.5 2.5C12.5 3.16304 12.2366 3.79893 11.7678 4.26777C11.2989 4.73661 10.663 5 10 5Z" fill="#205375"/>
+                                        </svg>
                                     </div>
                                     <nav class="popup-window">
                                            <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
@@ -1059,8 +1313,9 @@ function initializeLeaveDataTable() {
                     button = `<label class="popup">
                                         <input type="checkbox">
                                         <div class="burger" tabindex="0">
-                                        <span></span>
-                                        <span></span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="5" viewBox="0 0 20 5" fill="none">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M17.5 5C16.837 5 16.2011 4.73661 15.7322 4.26777C15.2634 3.79893 15 3.16304 15 2.5C15 1.83696 15.2634 1.20107 15.7322 0.732234C16.2011 0.263393 16.837 0 17.5 0C18.163 0 18.7989 0.263393 19.2678 0.732234C19.7366 1.20107 20 1.83696 20 2.5C20 3.16304 19.7366 3.79893 19.2678 4.26777C18.7989 4.73661 18.163 5 17.5 5ZM2.5 5C1.83696 5 1.20107 4.73661 0.732233 4.26777C0.263392 3.79893 0 3.16304 0 2.5C0 1.83696 0.263392 1.20107 0.732233 0.732234C1.20107 0.263393 1.83696 0 2.5 0C3.16304 0 3.79893 0.263393 4.26777 0.732234C4.73661 1.20107 5 1.83696 5 2.5C5 3.16304 4.73661 3.79893 4.26777 4.26777C3.79893 4.73661 3.16304 5 2.5 5ZM10 5C9.33696 5 8.70107 4.73661 8.23223 4.26777C7.76339 3.79893 7.5 3.16304 7.5 2.5C7.5 1.83696 7.76339 1.20107 8.23223 0.732234C8.70107 0.263393 9.33696 0 10 0C10.663 0 11.2989 0.263393 11.7678 0.732234C12.2366 1.20107 12.5 1.83696 12.5 2.5C12.5 3.16304 12.2366 3.79893 11.7678 4.26777C11.2989 4.73661 10.663 5 10 5Z" fill="#205375"/>
+                                            </svg>
                                         </div>
                                         <nav class="popup-window">
                                             <button class="tbl-decline btn btn-danger" id="aprroved-timein" title="Delete"
@@ -1167,16 +1422,6 @@ function initializeLeaveDataTable() {
             },
         ],
         buttons: [
-            //{
-            //    extend: 'pdf',
-            //    text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export PDF File</span>',
-            //    title: 'Leave Request List', // Set custom title in the file
-            //    filename: 'Leave_Request_List', // Custom file name
-            //    className: 'btn btn-info',
-            //    exportOptions: {
-            //        columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
-            //    }
-            //},
             {
                 extend: 'excel',
                 text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-file-arrow-down"></i> Export Excel File</span>',
@@ -1187,13 +1432,6 @@ function initializeLeaveDataTable() {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8] // Specify column indexes to export
                 }
             },
-            //{
-            //    text: '<span style="color: white; font-weight: 400;"><i class="fa-solid fa-circle-minus"></i> Decline</span>',
-            //    className: 'btn btn-danger',
-            //    action: function () {
-            //        DeclineOvertime(); // Call your custom function
-            //    }
-            //},
             {
                 text: 'Filters',
                 action: function () { },

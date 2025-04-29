@@ -1,8 +1,7 @@
 .initial {
     background-color: var(--dark);
-    width: 40px;
-    height: 40px;
-    border-radius: 100%;
+    padding: 10px;
+    border-radius: 50%;
     font-weight: 600;
     color: #fff;
     font-size: 15px;
@@ -10,4 +9,301 @@
     justify-content: center;
     align-items: center;
     cursor:default;
+}
+.employeeprofile{
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+.empdetails{
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+.empdetails strong{
+    font-size: .9rem
+}
+
+/*Wizzard progress steps*/
+.wizzard-progress-steps{
+    display: flex;
+    justify-content: center;
+/*    justify-content: space-between*/
+
+}
+.wizzard-progress-steps .page-indicator{
+/*    padding: 20px;*/
+    position: relative;
+    margin-right: 40px;
+    width: 100%;
+    
+}
+.wizzard-progress-steps .page-indicator .page {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 5px 15px;
+    border-radius: 8px;
+    height: 60px;
+}
+
+.wizzard-progress-steps .page-indicator .page p{
+    margin: 0;
+}
+.wizzard-progress-steps .page-indicator .page p.page-number{
+    border: 2px solid var(--dark);
+    padding: 8px;
+    border-radius: 50%
+}
+
+.wizzard-progress-steps .page-indicator .active p.page-number {
+    border-color: #fff
+}
+.wizzard-progress-steps .page-indicator .active {
+    
+    background: #194d6f;
+    color: #fff
+}
+.wizzard-progress-steps .page-indicator .page.active::before {
+    content: "";
+    background: red;
+    height: 45px;
+    width: 5px;
+    position: absolute;
+    left: -15px;
+}
+.wizzard-progress-steps .page-indicator .page.active::after {
+    content: "";
+    background: #194d6f;
+    color: transparent;
+    padding: 15px;
+    position: absolute;
+    right: -17px;
+    height: 45px;
+    width: 45px;
+    transform: rotate(45deg);
+    border-radius: 8px;
+    z-index: -1;
+}
+.wizzard-progress-steps .page-indicator .page svg{
+    display: none;
+}
+.wizzard-progress-steps .page-indicator .page.completed p.page-number{
+    display: none;
+}
+
+.wizzard-progress-steps .page-indicator .page.completed svg{
+    display: block;
+}
+.wizzard-progress-button{
+    display:flex;
+    justify-content: space-between;
+    margin: 50px 0
+
+}
+.wizzard-progress-button button{
+    padding: 15px;
+    width: 120px;
+    border: none;
+    border-radius: 8px;
+}
+.wizzard-progress-button button#wizzard-next{
+    background-color: var(--dark);
+    color: var(--light);
+    font-weight: 600
+}
+.page-container{
+    background: #fff
+}
+.body-container{
+    display: flex;
+    flex-direction: column
+}
+.body-container .page-title-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.body-container .page-title{
+    width: 50%;
+
+}
+.body-container h4{
+    font-weight: 700;
+    font-size: 2rem;
+    padding-bottom: 15px;
+}
+.body-container .title-underline{
+    width: 35%;
+    height: 5px;
+    border-end-start-radius: 8px;
+    border-end-end-radius: 8px;
+    border-bottom: 7px solid red;
+}
+.body-container .profile-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding:0;
+    justify-content: end;
+    gap: 15px;
+}
+.body-container .profile-container .upload-image-preview1 {
+    background-color: gainsboro;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex; 
+    justify-content: center;
+    margin: 0;
+}
+.body-container .profile-container .button-holder  {
+    display: flex;
+    justify-content: end;
+}
+.body-container .profile-container .button-holder label[for="img"]{
+    width: 100%;
+}
+.page-container {
+    display: none;
+}
+
+#page-1-container {
+    display: flex;
+}
+.page-container input{
+    border: none !important;
+}
+
+
+#employeeForm .body-container .payroll-section .mod-form-row,
+#employeeForm .body-container .address-section .mod-form-row,
+#employeeForm .body-container .contact-section .mod-form-row {
+    flex-direction: column !important;
+    padding: 0 200px !important
+}
+#employeeForm .body-container .payroll-section .mod-form-row .input-container-whole{
+    
+}
+
+/*Input*/
+
+#employeeForm .mod-form-row {
+    gap: 20px;
+}
+#employeeForm .mod-form-row .input-container-whole{
+/*    background: red*/
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    justify-content: space-between;
+    position: relative;
+    margin-top: 40px;
+}
+#employeeForm .mod-form-row .input-container-whole input[type="text"]:focus ~ .label,
+#employeeForm .mod-form-row .input-container-whole input[type="text"]:valid ~ .label,
+#employeeForm .mod-form-row .input-container-whole input[type="number"]:focus ~ .label,
+#employeeForm .mod-form-row .input-container-whole input[type="number"]:valid ~ .label, #employeeForm .mod-form-row .input-container-whole select:focus ~ .label,
+#employeeForm .mod-form-row .input-container-whole select:valid ~ .label,
+#employeeForm .mod-form-row .input-container-whole.empid .label,
+#employeeForm .mod-form-row .input-container-whole.date .label {
+    top: -15px;
+    background: #fff;
+    z-index: 1;
+    padding: 5px;
+    color: var(--dark);
+}
+#employeeForm .mod-form-row .input-container-whole.empid input{
+    background: #fff;
+}
+#employeeForm .mod-form-row .input-container-whole .label {
+    position: absolute;
+    left: 15px;
+    top: 18px;
+    color: #A7A7A7;
+    font-weight: 400
+}
+
+#employeeForm .mod-form-row .input-container-whole input[type="text"]:focus ~ .underline,
+#employeeForm .mod-form-row .input-container-whole input[type="text"]:valid ~ .underline,
+#employeeForm .mod-form-row .input-container-whole input[type="number"]:focus ~ .underline,
+#employeeForm .mod-form-row .input-container-whole input[type="number"]:valid ~ .underline,
+#employeeForm .mod-form-row .input-container-whole select:focus ~ .underline,
+#employeeForm .mod-form-row .input-container-whole select:valid ~ .underline,
+#employeeForm .mod-form-row .input-container-whole.empid .underline,
+#employeeForm .mod-form-row .input-container-whole.date .underline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #333;
+    border-radius: 4px;
+    pointer-events: none;
+    border-color: var(--dark);
+}
+#employeeForm .mod-form-row .input-container-whole input,
+#employeeForm .mod-form-row .input-container-whole select{
+    box-shadow: none;
+    border: none;
+    border-bottom: 2px solid var(--dark) !important;
+    border-radius: 0;
+    margin: 0;
+    height: 60px;
+}
+
+
+/*Required Documents*/
+
+.upload-container {
+    width: 500px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+}
+
+.drop-area {
+    border: 2px dashed #ccc;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.file-item {
+    background: #f0f7ff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.progress-bar {
+    height: 5px;
+    background: #007bff;
+    width: 0%;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.file-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.file-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+
+.browse-file-btn {
+    background-color: #05294d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
 }
